@@ -4,7 +4,6 @@ from django.db import models
 class Element(models.Model):
      name = models.CharField(max_length=50, null= True, verbose_name = "Name")
      audio= models.FileField(upload_to='Audios/', max_length=100, null= True, verbose_name = "Audio")
-     volume= models.IntegerField(default=50, verbose_name = "Volume", help_text = "Default volume is 50")
      class meta:
           verbose_name = "Element"
           verbose_name_plural = "Elements"

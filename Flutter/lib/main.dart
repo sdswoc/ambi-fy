@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/Views/screens/audioplayer.dart';
+import 'package:frontend/Views/screens/browse.dart';
+import 'package:frontend/Views/screens/history.dart';
 import 'package:frontend/Views/screens/library.dart';
+import 'package:frontend/Views/screens/more_ver.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,8 +18,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'Roboto', brightness: Brightness.dark),
-      home: SoundLibrary(),
-      routes: Map(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const SoundLibrary(),
+        '/history': (context) => const History(),
+        '/audioplayer': (context) => ClassAudioPlayer(),
+        '/browse': (context) => const Browse(),
+        '/more': (context) => MoreVer()
+      },
     );
   }
 }

@@ -23,7 +23,7 @@ class _ManyChoiceChipState extends State<ManyChoiceChip> {
       chips.add(Padding(
         padding: const EdgeInsets.all(8.0),
         child: ChoiceChip(
-            label: Text("${a[i]}"),
+            label: Text(a[i]),
             selected: v[i],
             selectedColor: Color.fromARGB(255, 149, 121, 121),
             onSelected: (bool val) {

@@ -10,34 +10,6 @@ class BottomNav extends StatefulWidget {
 
 class _BottomNavState extends State<BottomNav> {
   int _selectedindex = 0;
-  String _title = "";
-  void _navigatebottombar(int index) {
-    setState(() {
-      _selectedindex = index;
-      switch (index) {
-        case 0:
-          {
-            _title = "Your Library";
-          }
-          break;
-        case 1:
-          {
-            _title = "History";
-          }
-          break;
-        case 2:
-          {
-            _title = "Browse";
-          }
-          break;
-        case 3:
-          {
-            _title = "More";
-          }
-          break;
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +21,11 @@ class _BottomNavState extends State<BottomNav> {
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: GNav(
-            onTabChange: _navigatebottombar,
+            onTabChange: (index) {
+              setState(() {
+                _selectedindex = index;
+              });
+            },
             selectedIndex: _selectedindex,
             backgroundColor: Colors.black,
             gap: 6,
@@ -59,11 +35,11 @@ class _BottomNavState extends State<BottomNav> {
             tabBackgroundColor:
                 const Color.fromARGB(255, 110, 110, 110).withOpacity(0.25),
             padding: const EdgeInsets.all(10),
-            tabs: const [
-              GButton(icon: Icons.library_music),
-              GButton(icon: Icons.history),
-              GButton(icon: Icons.browse_gallery_outlined),
-              GButton(icon: Icons.more_horiz)
+            tabs: [
+              GButton(icon: Icons.library_music, text: 'Your Library'),
+              GButton(icon: Icons.history, text: 'History'),
+              GButton(icon: Icons.browse_gallery_outlined, text: 'Browse'),
+              GButton(icon: Icons.more_horiz, text: 'More')
             ]),
       ),
     );

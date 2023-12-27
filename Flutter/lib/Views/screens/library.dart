@@ -13,7 +13,6 @@ class SoundLibrary extends StatefulWidget {
 class _SoundLibraryState extends State<SoundLibrary> {
   bool isExpanded = false;
 
-//final String _title = "Your Library";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,10 +69,10 @@ class _SoundLibraryState extends State<SoundLibrary> {
                 onPressed: () {},
               ),
             ]),
-        body: Column(
+        body: const Column(
           children: [
             SingleChildScrollView(
-                child: ManyChoiceChip(), scrollDirection: Axis.horizontal),
+                scrollDirection: Axis.horizontal, child: ManyChoiceChip()),
             Expanded(child: SoundGenerator())
           ],
         ),
