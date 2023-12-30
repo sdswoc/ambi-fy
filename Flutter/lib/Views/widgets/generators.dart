@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/Models/_Soundscape_service.dart';
 import 'package:frontend/Models/_Soundscape.dart';
+import 'package:frontend/Views/screens/audioplayer.dart';
+import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
 class SoundGenerator extends StatefulWidget {
@@ -21,7 +23,9 @@ class _SoundGeneratorState extends State<SoundGenerator> {
       generators.add(InkWell(
         onLongPress: null,
         onTap: () {
-          Navigator.pushNamed(context, '/audioplayer');
+          Get.to(() => ClassAudioPlayer(mySoundscape: _soundscapes[i]),
+              transition: Transition.zoom,
+              duration: const Duration(milliseconds: 150));
         },
         child: Padding(
           padding: const EdgeInsets.all(8.0),
