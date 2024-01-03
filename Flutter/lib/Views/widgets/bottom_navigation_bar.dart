@@ -23,23 +23,23 @@ class _BottomNavState extends State<BottomNav> {
     switch (_selectedIndex) {
       case 0:
         {
-          Get.toNamed('/');
+          Get.offAll('/');
           break;
         }
 
       case 1:
         {
-          Get.toNamed('/history');
+          Get.offAll('/history');
           break;
         }
       case 2:
         {
-          Get.toNamed('/browse');
+          Get.offAll('/browse');
           break;
         }
       case 3:
         {
-          Get.toNamed('/more');
+          Get.offAll('/more');
           break;
         }
     }

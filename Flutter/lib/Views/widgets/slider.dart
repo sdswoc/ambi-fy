@@ -1,11 +1,13 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/Models/_Soundscape.dart';
+import 'dart:math';
+import 'dart:async';
 
 List<int> bars = [];
 const barWidth = 5.0;
 late double screenWidth;
-late int numberOfBars;
+const int numberOfBars = 70;
 
 void barLength() {
   for (var i = 0; i < numberOfBars; i++) {
@@ -23,25 +25,42 @@ class CustomSliderbar extends StatefulWidget {
 }
 
 class _CustomSliderbarState extends State<CustomSliderbar> {
-  late AudioPlayer _audioPlayer;
+  List<AudioPlayer> _audioPlayer = [];
+  Random random = Random();
   bool isPlaying = false;
+  final int noOfPlayers = 5;
+  List<String> audioUrl = [];
 
   @override
   void initState() {
     super.initState();
-    _audioPlayer = AudioPlayer();
+    _audioPlayer = List.generate(noOfPlayers, (index) => AudioPlayer());
+    audioUrl = List.filled(noOfPlayers, '');
   }
 
   Future<void> _play() async {
     try {
       if (widget.mySoundscape.elements.isNotEmpty) {
-        String audioUrl = widget.mySoundscape.elements[0].audio;
+        for (int i = 0; i < noOfPlayers; i++) {
+          audioUrl[i] = widget.mySoundscape.elements[i].audio;
+          await _audioPlayer[i].stop();
+          if (widget.mySoundscape.elements[i].name == 'Birds') {
+            Timer(Duration(seconds: 30), () async {
+              int startPosition = random.nextInt(30);
+              await _audioPlayer[i].seek(Duration(seconds: startPosition));
+              _audioPlayer[i].play(DeviceFileSource(audioUrl[i]));
 
-        await _audioPlayer.stop();
-
-        // var source = await _audioPlayer.toPlayer(audioUrl);
-
-        await _audioPlayer.play(DeviceFileSource(audioUrl));
+              // Stop after 10 seconds
+              await Future.delayed(Duration(seconds: 10));
+              await _audioPlayer[i].stop();
+              //await _audioPlayer[i].setSource(DeviceFileSource(audioUrl[i]));
+              //await _audioPlayer[i].play(DeviceFileSource(audioUrl[i]));
+            });
+          } else {
+            _audioPlayer[i].setReleaseMode(ReleaseMode.loop);
+            await _audioPlayer[i].play(DeviceFileSource(audioUrl[i]));
+          }
+        }
         setState(() {
           isPlaying = true;
         });
@@ -53,7 +72,9 @@ class _CustomSliderbarState extends State<CustomSliderbar> {
 
   Future<void> _pause() async {
     try {
-      await _audioPlayer.pause();
+      for (int i = 0; i < noOfPlayers; i++) {
+        await _audioPlayer[i].pause();
+      }
       setState(() {
         isPlaying = false;
       });
@@ -64,28 +85,28 @@ class _CustomSliderbarState extends State<CustomSliderbar> {
 
   @override
   void dispose() {
-    _audioPlayer.dispose();
+    for (int i = 0; i < noOfPlayers; i++) {
+      _audioPlayer[i].dispose();
+    }
     super.dispose();
   }
 
   Future<void> _stop() async {
-    await _audioPlayer.stop();
+    for (int i = 0; i < noOfPlayers; i++) {
+      await _audioPlayer[i].stop();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     if (bars.isEmpty) {
-      numberOfBars = 70;
       barLength();
     }
     return Column(
       children: [
         Row(children: [
-          (WaveSlider(mySoundscape: widget.mySoundscape)),
-          (WaveSlider(mySoundscape: widget.mySoundscape)),
-          (WaveSlider(mySoundscape: widget.mySoundscape)),
-          (WaveSlider(mySoundscape: widget.mySoundscape)),
-          (WaveSlider(mySoundscape: widget.mySoundscape))
+          for (int i = 0; i < noOfPlayers; i++)
+            WaveSlider(audioPlayer: _audioPlayer[i]),
         ]),
         IconButton(
           icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
@@ -103,21 +124,24 @@ class _CustomSliderbarState extends State<CustomSliderbar> {
 }
 
 class WaveSlider extends StatefulWidget {
-  final MySoundscape mySoundscape;
+  final AudioPlayer audioPlayer;
 
-  const WaveSlider({super.key, required this.mySoundscape});
+  const WaveSlider({super.key, required this.audioPlayer});
   @override
   State<StatefulWidget> createState() => WaveSliderState();
 }
 
 class WaveSliderState extends State<WaveSlider> {
   double bar2Position = 180.0;
+  double volume = 1 / 350 * 0.5;
 
-  _onTapUp(TapUpDetails details) {
-    var y = details.globalPosition.dy;
-    print("tap up " + y.toString());
+  _onTapDown(TapDownDetails details) {
+    var y = 487.5479910714285552 - details.globalPosition.dy;
+    print("tap down " + y.toString());
     setState(() {
       bar2Position = y;
+      volume = 1 / 350 * bar2Position;
+      widget.audioPlayer.setVolume(volume);
     });
   }
 
@@ -129,10 +153,25 @@ class WaveSliderState extends State<WaveSlider> {
         alignment: Alignment.centerLeft,
         children: <Widget>[
           GestureDetector(
-            onTapUp: (TapUpDetails details) => _onTapUp(details),
+            onTapDown: (TapDownDetails details) => _onTapDown(details),
             onVerticalDragUpdate: (DragUpdateDetails details) {
               setState(() {
-                bar2Position = details.globalPosition.dy;
+                if (bar2Position <= 350 && bar2Position >= 0) {
+                  bar2Position =
+                      487.5479910714285552 - details.globalPosition.dy;
+                  volume = 1 / 350 * bar2Position;
+                  widget.audioPlayer.setVolume(volume);
+                } else if (bar2Position > 350) {
+                  bar2Position = 350;
+                  volume = 1;
+                  widget.audioPlayer.setVolume(volume);
+                } else if (bar2Position < 0) {
+                  bar2Position = 0;
+                  volume = 0;
+                  widget.audioPlayer.setVolume(volume);
+                }
+
+                print('drag position: $bar2Position');
               });
             },
             child: Padding(

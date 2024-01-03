@@ -28,11 +28,11 @@ class ElementListCreateView(generics.ListCreateAPIView):
 class SoundscapeListCreateView(generics.ListCreateAPIView):
     queryset = Soundscape.objects.all()
     serializer_class = SoundscapeSerializer
-
-    def get(self, request, *args, **kwargs):
-        if 'audio' in request.GET:
-            audio_file_path = request.GET['audio']
-            audio_file = os.path.join(settings.MEDIA_ROOT, audio_file_path)
-            return FileResponse(open(audio_file, 'rb'), content_type='audio/wav')
-        return super().get(request, *args, **kwargs)
-
+#
+    #def get(self, request, *args, **kwargs):
+    #    if 'audio' in request.GET:
+    #        audio_file_path = request.GET['audio']
+    #        audio_file = os.path.join(settings.MEDIA_ROOT, audio_file_path)
+    #        return FileResponse(open(audio_file, 'rb'), content_type='audio/wav')
+    #    return super().get(request, *args, **kwargs)
+#
