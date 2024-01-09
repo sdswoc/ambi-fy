@@ -68,6 +68,6 @@ class _MoreVerState extends State<MoreVer> {
               ),
             ]),
         body: const Column(),
-        bottomNavigationBar: const BottomNav());
+        bottomNavigationBar: const BottomNav(selectedIndex: 3));
   }
 }

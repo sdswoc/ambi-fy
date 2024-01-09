@@ -5,29 +5,17 @@ import 'package:get/get.dart';
 
 class ClassAudioPlayer extends StatefulWidget {
   final MySoundscape mySoundscape;
+  final List<String>? oneDHkey;
+  final String? code;
 
-  const ClassAudioPlayer({super.key, required this.mySoundscape});
+  const ClassAudioPlayer(
+      {super.key, required this.mySoundscape, this.oneDHkey, this.code});
 
   @override
   State<ClassAudioPlayer> createState() => _ClassAudioPlayerState();
 }
 
-class _ClassAudioPlayerState extends State<ClassAudioPlayer>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
+class _ClassAudioPlayerState extends State<ClassAudioPlayer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +25,7 @@ class _ClassAudioPlayerState extends State<ClassAudioPlayer>
               onPressed: () {
                 Get.back();
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.arrow_back_ios,
                 color: Colors.white,
                 size: 24,
@@ -52,7 +40,10 @@ class _ClassAudioPlayerState extends State<ClassAudioPlayer>
         body: Column(
           children: [
             Row(children: [
-              CustomSliderbar(mySoundscape: widget.mySoundscape),
+              CustomSliderbar(
+                  mySoundscape: widget.mySoundscape,
+                  oneDHkey: widget.oneDHkey,
+                  code: widget.code),
             ])
           ],
         ));

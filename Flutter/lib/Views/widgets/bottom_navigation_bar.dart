@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/Views/screens/library.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:get/get.dart';
 
 class BottomNav extends StatefulWidget {
-  const BottomNav({Key? key}) : super(key: key);
+  final int selectedIndex;
+  const BottomNav({Key? key, required this.selectedIndex}) : super(key: key);
 
   @override
   State<BottomNav> createState() => _BottomNavState();
@@ -12,8 +12,6 @@ class BottomNav extends StatefulWidget {
 
 class _BottomNavState extends State<BottomNav> {
   int _selectedIndex = 0;
-
-  final List<String> myPages = ['/', '/history', '/browse', '/more'];
 
   void _switchPage(int index) {
     setState(() {
@@ -23,23 +21,23 @@ class _BottomNavState extends State<BottomNav> {
     switch (_selectedIndex) {
       case 0:
         {
-          Get.offAll('/');
+          Get.offAllNamed('/');
           break;
         }
 
       case 1:
         {
-          Get.offAll('/history');
+          Get.offAllNamed('/history');
           break;
         }
       case 2:
         {
-          Get.offAll('/browse');
+          Get.offAllNamed('/browse');
           break;
         }
       case 3:
         {
-          Get.offAll('/more');
+          Get.offAllNamed('/more');
           break;
         }
     }
@@ -56,7 +54,7 @@ class _BottomNavState extends State<BottomNav> {
         padding: const EdgeInsets.all(20),
         child: GNav(
           onTabChange: _switchPage,
-          selectedIndex: _selectedIndex,
+          selectedIndex: widget.selectedIndex,
           backgroundColor: Colors.black,
           gap: 6,
           color: const Color.fromARGB(255, 87, 87, 87),
@@ -65,7 +63,7 @@ class _BottomNavState extends State<BottomNav> {
           tabBackgroundColor:
               const Color.fromARGB(255, 110, 110, 110).withOpacity(0.25),
           padding: const EdgeInsets.all(10),
-          tabs: [
+          tabs: const [
             GButton(icon: Icons.library_music, text: 'Your Library'),
             GButton(icon: Icons.history, text: 'History'),
             GButton(icon: Icons.browse_gallery_outlined, text: 'Browse'),

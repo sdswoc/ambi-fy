@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/Models/_Soundscape.dart';
 import 'dart:math';
 import 'dart:async';
+import 'package:frontend/Views/widgets/waveslider.dart';
 
 List<int> bars = [];
 const barWidth = 5.0;
@@ -17,8 +18,11 @@ void barLength() {
 
 class CustomSliderbar extends StatefulWidget {
   final MySoundscape mySoundscape;
+  final List<String>? oneDHkey;
+  final String? code;
 
-  const CustomSliderbar({super.key, required this.mySoundscape});
+  const CustomSliderbar(
+      {super.key, required this.mySoundscape, this.oneDHkey, this.code});
 
   @override
   State<CustomSliderbar> createState() => _CustomSliderbarState();
@@ -30,6 +34,7 @@ class _CustomSliderbarState extends State<CustomSliderbar> {
   bool isPlaying = false;
   final int noOfPlayers = 5;
   List<String> audioUrl = [];
+  bool hasVolume = true;
 
   @override
   void initState() {
@@ -45,17 +50,9 @@ class _CustomSliderbarState extends State<CustomSliderbar> {
           audioUrl[i] = widget.mySoundscape.elements[i].audio;
           await _audioPlayer[i].stop();
           if (widget.mySoundscape.elements[i].name == 'Birds') {
-            Timer(Duration(seconds: 30), () async {
-              int startPosition = random.nextInt(30);
-              await _audioPlayer[i].seek(Duration(seconds: startPosition));
-              _audioPlayer[i].play(DeviceFileSource(audioUrl[i]));
-
-              // Stop after 10 seconds
-              await Future.delayed(Duration(seconds: 10));
-              await _audioPlayer[i].stop();
-              //await _audioPlayer[i].setSource(DeviceFileSource(audioUrl[i]));
-              //await _audioPlayer[i].play(DeviceFileSource(audioUrl[i]));
-            });
+            //_audioPlayer[i].setSource(DeviceFileSource(audioUrl[i]));
+            _audioPlayer[i].setReleaseMode(ReleaseMode.loop);
+            await _audioPlayer[i].play(DeviceFileSource(audioUrl[i]));
           } else {
             _audioPlayer[i].setReleaseMode(ReleaseMode.loop);
             await _audioPlayer[i].play(DeviceFileSource(audioUrl[i]));
@@ -83,6 +80,23 @@ class _CustomSliderbarState extends State<CustomSliderbar> {
     }
   }
 
+//  Future<void> _mutevolume() async {
+//    for (int i = 0; i < noOfPlayers; i++) {
+//      await _audioPlayer[i].setVolume(0);
+//    }
+//    setState(() {
+//      hasVolume = false;
+//    });
+//  }
+//  Future<void> _setvolume() async {
+//    for (int i = 0; i < noOfPlayers; i++) {
+//      await _audioPlayer[i].setVolume(WaveSliderState().volume);
+//    }
+//    setState(() {
+//      hasVolume = true;
+//    });
+//  }
+
   @override
   void dispose() {
     for (int i = 0; i < noOfPlayers; i++) {
@@ -106,101 +120,43 @@ class _CustomSliderbarState extends State<CustomSliderbar> {
       children: [
         Row(children: [
           for (int i = 0; i < noOfPlayers; i++)
-            WaveSlider(audioPlayer: _audioPlayer[i]),
+            WaveSlider(
+                elementName: widget.mySoundscape.elements[i].name,
+                audioPlayer: _audioPlayer[i],
+                hkey: widget.oneDHkey![i],
+                code: widget.code)
         ]),
-        IconButton(
-          icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
-          onPressed: () {
-            if (isPlaying) {
-              _pause();
-            } else {
-              _play();
-            }
-          },
-        ),
-      ],
-    );
-  }
-}
-
-class WaveSlider extends StatefulWidget {
-  final AudioPlayer audioPlayer;
-
-  const WaveSlider({super.key, required this.audioPlayer});
-  @override
-  State<StatefulWidget> createState() => WaveSliderState();
-}
-
-class WaveSliderState extends State<WaveSlider> {
-  double bar2Position = 180.0;
-  double volume = 1 / 350 * 0.5;
-
-  _onTapDown(TapDownDetails details) {
-    var y = 487.5479910714285552 - details.globalPosition.dy;
-    print("tap down " + y.toString());
-    setState(() {
-      bar2Position = y;
-      volume = 1 / 350 * bar2Position;
-      widget.audioPlayer.setVolume(volume);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    int barItem = 0;
-    return Center(
-      child: Stack(
-        alignment: Alignment.centerLeft,
-        children: <Widget>[
-          GestureDetector(
-            onTapDown: (TapDownDetails details) => _onTapDown(details),
-            onVerticalDragUpdate: (DragUpdateDetails details) {
-              setState(() {
-                if (bar2Position <= 350 && bar2Position >= 0) {
-                  bar2Position =
-                      487.5479910714285552 - details.globalPosition.dy;
-                  volume = 1 / 350 * bar2Position;
-                  widget.audioPlayer.setVolume(volume);
-                } else if (bar2Position > 350) {
-                  bar2Position = 350;
-                  volume = 1;
-                  widget.audioPlayer.setVolume(volume);
-                } else if (bar2Position < 0) {
-                  bar2Position = 0;
-                  volume = 0;
-                  widget.audioPlayer.setVolume(volume);
-                }
-
-                print('drag position: $bar2Position');
-              });
-            },
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(38, 40, 2, 25),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: RotatedBox(
-                  quarterTurns: -1,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: bars.map((int height) {
-                      Color color = barItem + 1 < bar2Position / barWidth
-                          ? Color(0xffec4b5d)
-                          : Color(0xffec4b5d33);
-                      barItem++;
-                      return Container(
-                        color: color,
-                        height: height.toDouble(),
-                        width: 5.0,
-                      );
-                    }).toList(),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(45, 80, 8, 16),
+          child: Material(
+            type: MaterialType.transparency,
+            child: Ink(
+              decoration: BoxDecoration(
+                border: Border.all(
+                    color: const Color.fromARGB(255, 255, 255, 255), width: 4),
+                shape: BoxShape.circle,
+              ),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(100),
+                child: Center(
+                  child: IconButton(
+                    icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow,
+                        size: 80,
+                        color: const Color.fromARGB(255, 255, 255, 255)),
+                    onPressed: () {
+                      if (isPlaying) {
+                        _pause();
+                      } else {
+                        _play();
+                      }
+                    },
                   ),
                 ),
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

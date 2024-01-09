@@ -12,6 +12,8 @@ class SoundLibrary extends StatefulWidget {
 
 class _SoundLibraryState extends State<SoundLibrary> {
   bool isExpanded = false;
+  String? _enteredword;
+  static const String code = 'library';
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +21,8 @@ class _SoundLibraryState extends State<SoundLibrary> {
         appBar: AppBar(
             toolbarHeight: 65,
             backgroundColor: Colors.black,
-            title: Text("Your  Library",
-                style: const TextStyle(
+            title: const Text("Your  Library",
+                style: TextStyle(
                     color: Colors.white,
                     fontSize: 24,
                     fontWeight: FontWeight.w400,
@@ -43,7 +45,7 @@ class _SoundLibraryState extends State<SoundLibrary> {
                 },
               ),
               AnimatedContainer(
-                duration: const Duration(milliseconds: 175),
+                duration: const Duration(milliseconds: 120),
                 width: isExpanded ? 315.0 : 0.0,
                 height: 40.0,
                 decoration: BoxDecoration(
@@ -53,6 +55,11 @@ class _SoundLibraryState extends State<SoundLibrary> {
                 child: isExpanded
                     ? TextField(
                         style: TextStyle(color: Colors.grey[350]),
+                        onChanged: (value) {
+                          setState(() {
+                            _enteredword = value;
+                          });
+                        },
                         decoration: InputDecoration(
                           fillColor: Colors.grey[350],
                           hintText: 'Search...',
@@ -64,18 +71,21 @@ class _SoundLibraryState extends State<SoundLibrary> {
                     : null,
               ),
               IconButton(
-                icon: Icon(Icons.more_vert, color: Colors.white),
+                icon: const Icon(Icons.more_vert, color: Colors.white),
                 iconSize: 27,
                 onPressed: () {},
               ),
             ]),
-        body: const Column(
+        body: Column(
           children: [
-            SingleChildScrollView(
+            const SingleChildScrollView(
                 scrollDirection: Axis.horizontal, child: ManyChoiceChip()),
-            Expanded(child: SoundGenerator())
+            Expanded(
+                child: SoundGenerator(enteredword: _enteredword, code: code))
           ],
         ),
-        bottomNavigationBar: const BottomNav());
+        bottomNavigationBar: const BottomNav(
+          selectedIndex: 0,
+        ));
   }
 }

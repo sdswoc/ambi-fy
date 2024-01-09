@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/Views/screens/browse.dart';
 import 'package:frontend/Views/screens/history.dart';
 import 'package:frontend/Views/screens/library.dart';
 import 'package:frontend/Views/screens/more_ver.dart';
 import 'package:get/get.dart';
 
-void main() {
+void main() async {
+  await dotenv.load();
   runApp(const MyApp());
 }
 
@@ -20,10 +22,26 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(fontFamily: 'Roboto', brightness: Brightness.dark),
       initialRoute: '/',
       getPages: [
-        GetPage(name: '/', page: () => const SoundLibrary()),
-        GetPage(name: '/history', page: () => const History()),
-        GetPage(name: '/browse', page: () => const Browse()),
-        GetPage(name: '/more', page: () => const MoreVer()),
+        GetPage(
+            name: '/',
+            page: () => const SoundLibrary(),
+            transition: Transition.native,
+            transitionDuration: const Duration(milliseconds: 100)),
+        GetPage(
+            name: '/history',
+            page: () => const History(),
+            transition: Transition.native,
+            transitionDuration: const Duration(milliseconds: 100)),
+        GetPage(
+            name: '/browse',
+            page: () => const Browse(),
+            transition: Transition.native,
+            transitionDuration: const Duration(milliseconds: 100)),
+        GetPage(
+            name: '/more',
+            page: () => const MoreVer(),
+            transition: Transition.native,
+            transitionDuration: const Duration(milliseconds: 100)),
       ],
     );
   }

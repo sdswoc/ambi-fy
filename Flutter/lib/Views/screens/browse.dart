@@ -17,8 +17,8 @@ class _BrowseState extends State<Browse> {
         appBar: AppBar(
             toolbarHeight: 65,
             backgroundColor: Colors.black,
-            title: Text("Browse",
-                style: const TextStyle(
+            title: const Text("Browse",
+                style: TextStyle(
                     color: Colors.white,
                     fontSize: 24,
                     fontWeight: FontWeight.w400,
@@ -68,6 +68,6 @@ class _BrowseState extends State<Browse> {
               ),
             ]),
         body: const Center(),
-        bottomNavigationBar: const BottomNav());
+        bottomNavigationBar: const BottomNav(selectedIndex: 2));
   }
 }
