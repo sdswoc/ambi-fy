@@ -15,3 +15,11 @@ class Soundscape(models.Model):
 
     def __str__(self):
         return self.name
+    
+class History(models.Model):
+     soundscape = models.ManyToManyField(Soundscape)  
+     datetime = models.DateTimeField()
+
+     def __str__(self):
+          return self.soundscape
+     

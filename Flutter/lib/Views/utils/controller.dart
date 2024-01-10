@@ -3,11 +3,14 @@ import 'package:frontend/Models/_Soundscape.dart';
 import 'package:frontend/Views/screens/audioplayer.dart';
 import 'package:frontend/Views/utils/keys.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class WidgetController extends GetxController with keysforhistory {
   final RxList<Widget> widgets = <Widget>[].obs;
 
-  void addWidget(List<MySoundscape> _soundscapes, MySoundscape soundscape) {
+  void addWidget(
+      List<MySoundscape> _soundscapes, MySoundscape soundscape) async {
+    final SharedPreferences historyList = await SharedPreferences.getInstance();
     List<List<String>>? twoDHkey = Hkeys(_soundscapes.length, 5);
     widgets.add(Material(
       elevation: 5,
