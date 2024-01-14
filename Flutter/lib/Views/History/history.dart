@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/Views/utils/bottom_navigation_bar.dart';
 import 'package:frontend/Views/History/historyGenerator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class History extends StatefulWidget {
   const History({super.key});
@@ -13,7 +14,18 @@ class _HistoryState extends State<History> {
   bool isExpanded = false;
   String? _enteredword;
   static const String code = 'history';
-  //final WidgetController controller = Get.find();
+
+  Future<void> _loadandEraseHistory(String key) async {
+    List<String> soundscapeName;
+    final SharedPreferences historyprefs =
+        await SharedPreferences.getInstance();
+    setState(() {
+      soundscapeName = historyprefs.getStringList(key) ?? [];
+      soundscapeName.clear();
+      historyprefs.setStringList(key, soundscapeName);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,7 +88,30 @@ class _HistoryState extends State<History> {
                 icon: const Icon(Icons.delete_forever_rounded,
                     color: Colors.white),
                 iconSize: 27,
-                onPressed: () {},
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                            title: const Text('Remove Everything'),
+                            content: const Text(
+                              'Are you sure? All history will be lost.',
+                            ),
+                            actions: [
+                              MaterialButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('Cancel')),
+                              MaterialButton(
+                                  onPressed: () {
+                                    _loadandEraseHistory('soundname__2');
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('OK'))
+                            ]);
+                      });
+                },
               ),
             ]),
         body: Column(
