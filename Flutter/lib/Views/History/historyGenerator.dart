@@ -41,6 +41,12 @@ class HistorySoundGeneratorState extends State<HistorySoundGenerator>
     _soundscapes = _SoundscapeService.getSoundscapes();
   }
 
+  Future<void> saveSoundscapename(String key, List<String> soundscapes) async {
+    final SharedPreferences historyprefs =
+        await SharedPreferences.getInstance();
+    historyprefs.setStringList(key, soundscapes);
+  }
+
   // ignore: non_constant_identifier_names
   Widget ManyHistorySoundGenerator(
       List<MySoundscape> _soundscapes,
@@ -92,19 +98,36 @@ class HistorySoundGeneratorState extends State<HistorySoundGenerator>
                         backgroundBlendMode: BlendMode.luminosity,
                         borderRadius: BorderRadius.circular(13),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 8, 0, 0),
-                        child: SizedBox(
-                          child: Text(
-                            historyscape,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Roboto',
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 8, 0, 0),
+                            child: SizedBox(
+                              width: 210,
+                              child: Text(
+                                historyscape,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Roboto',
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                          const SizedBox(width: 100),
+                          IconButton(
+                            onPressed: () {
+                              setState(() {
+                                soundscapeNames.remove(historyscape);
+                                saveSoundscapename(
+                                    'soundname__2', soundscapeNames);
+                              });
+                            },
+                            icon: const Icon(Icons.delete_outline_outlined,
+                                color: Colors.white, size: 28),
+                          )
+                        ],
                       ),
                     ),
                   ),
