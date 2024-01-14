@@ -13,7 +13,9 @@ class SoundscapeSerializer(serializers.ModelSerializer):
         fields= '__all__'      
 
 class HistorySerializer(serializers.ModelSerializer):
-    soundscape = SoundscapeSerializer(many= True, read_only= True)
+    soundscape = SoundscapeSerializer()
+
     class Meta:
         model = History
-        fields= '__all__'
+        fields = '__all__'
+

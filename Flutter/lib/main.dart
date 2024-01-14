@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:frontend/Views/screens/browse.dart';
-import 'package:frontend/Views/screens/history.dart';
-import 'package:frontend/Views/screens/library.dart';
-import 'package:frontend/Views/screens/more_ver.dart';
+import 'package:frontend/Views/Browse/browse.dart';
+import 'package:frontend/Views/History/history.dart';
+import 'package:frontend/Views/Library/library.dart';
+import 'package:frontend/Views/More/more_ver.dart';
 import 'package:get/get.dart';
 
 void main() async {

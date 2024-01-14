@@ -17,9 +17,8 @@ class Soundscape(models.Model):
         return self.name
     
 class History(models.Model):
-     soundscape = models.ManyToManyField(Soundscape)  
-     datetime = models.DateTimeField()
+     soundscape = models.ForeignKey(Soundscape, on_delete= models.CASCADE, null = True)  
 
      def __str__(self):
-          return self.soundscape
+        return self.soundscape.name
      

@@ -12,4 +12,8 @@ class MySoundscape {
         elements: List<MyElement>.from((data['elements'] as List)
             .map((elementData) => MyElement.fromJson(elementData))));
   }
+
+  Map<String, dynamic> toJson() {
+    return {'name': name, 'elements': elements};
+  }
 }

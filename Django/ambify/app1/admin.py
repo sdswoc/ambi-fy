@@ -10,4 +10,4 @@ class Soundscapeadmin(admin.ModelAdmin):
     list_display=['id','name']
 @admin.register(History)
 class Historyadmin(admin.ModelAdmin):
-    list_display= ['id', 'datetime']
+    list_display= ['id', 'soundscape']
