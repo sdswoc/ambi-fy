@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../Models/_Soundscape.dart';
+import '_Soundscape.dart';
 
 class SoundscapeService {
   final String? baseUrl;

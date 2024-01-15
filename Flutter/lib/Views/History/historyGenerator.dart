@@ -1,12 +1,11 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
-
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/Models/_Soundscape.dart';
-import 'package:frontend/ViewModels/_Soundscape_service.dart';
-import 'package:frontend/Views/utils/audioplayer.dart';
-import 'package:frontend/Views/utils/keys.dart';
-import 'package:frontend/Views/utils/soundscape_options.dart';
+import 'package:frontend/Models/_Soundscape_service.dart';
+import 'package:frontend/ViewModels/view_model.dart';
+import 'package:frontend/Views/Common/audioplayer.dart';
+import 'package:frontend/Views/utils/sound_generator_helper.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -26,19 +25,15 @@ class HistorySoundGenerator extends StatefulWidget {
 class HistorySoundGeneratorState extends State<HistorySoundGenerator>
     with keysforhistory {
   // ignore: non_constant_identifier_names
-  late SoundscapeService _SoundscapeService;
-  late Future<List<MySoundscape>> _soundscapes;
-  final String djangoURL = dotenv.env['LOCALHOST_URL']!;
   final String animationURL = dotenv.env['ANIMATION_URL']!;
   late List<List<String>>? twoDHkey;
   late List<String>? soundscapeName;
-  SoundscapeOptions historySoundscapeOptions = SoundscapeOptions();
+  late SoundGeneratorViewModel _historyviewModel;
 
   @override
   void initState() {
     super.initState();
-    _SoundscapeService = SoundscapeService(djangoURL);
-    _soundscapes = _SoundscapeService.getSoundscapes();
+    _historyviewModel = SoundGeneratorViewModel();
   }
 
   Future<void> saveSoundscapename(String key, List<String> soundscapes) async {
@@ -68,8 +63,8 @@ class HistorySoundGeneratorState extends State<HistorySoundGenerator>
                 onTap: () {
                   Get.to(
                     () => ClassAudioPlayer(
-                      mySoundscape: historySoundscapeOptions.soundscapefilter(
-                          _soundscapes, historyscape),
+                      mySoundscape:
+                          soundscapefilter(_soundscapes, historyscape),
                       oneDHkey:
                           twoDHkey![soundscapeNames.indexOf(historyscape)],
                       code: widget.code,
@@ -103,7 +98,7 @@ class HistorySoundGeneratorState extends State<HistorySoundGenerator>
                           Padding(
                             padding: const EdgeInsets.fromLTRB(20, 8, 0, 0),
                             child: SizedBox(
-                              width: 210,
+                              width: 200,
                               child: Text(
                                 historyscape,
                                 style: const TextStyle(
@@ -115,7 +110,7 @@ class HistorySoundGeneratorState extends State<HistorySoundGenerator>
                               ),
                             ),
                           ),
-                          const SizedBox(width: 100),
+                          const SizedBox(width: 120),
                           IconButton(
                             onPressed: () {
                               setState(() {
@@ -124,8 +119,7 @@ class HistorySoundGeneratorState extends State<HistorySoundGenerator>
                                     'soundname__2', soundscapeNames);
                               });
                             },
-                            icon: const Icon(Icons.delete_outline_outlined,
-                                color: Colors.white, size: 28),
+                            icon: const Icon(Icons.delete_rounded, size: 28),
                           )
                         ],
                       ),
@@ -158,7 +152,20 @@ class HistorySoundGeneratorState extends State<HistorySoundGenerator>
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error ?? "Unknown error"}');
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Text('No soundscapeName found');
+          return const Padding(
+            padding: EdgeInsets.fromLTRB(8, 240, 8, 0),
+            child: Center(
+                child: Column(
+              children: [
+                Center(
+                    child: Text(
+                  ' (ー_ー)!!',
+                  style: TextStyle(fontSize: 50),
+                )),
+                Center(child: Text('Empty History')),
+              ],
+            )),
+          );
         } else {
           soundscapeName = snapshot.data!;
           return futureWidget1();
@@ -169,7 +176,7 @@ class HistorySoundGeneratorState extends State<HistorySoundGenerator>
 
   FutureBuilder<List<MySoundscape>> futureWidget1() {
     return FutureBuilder<List<MySoundscape>>(
-      future: _soundscapes,
+      future: _historyviewModel.loadSoundscapes(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(

@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import 'package:frontend/Views/Library/librarybody.dart';
-import 'package:frontend/Views/utils/bottom_navigation_bar.dart';
+import 'package:frontend/Views/Common/bottom_navigation_bar.dart';
 
 class SoundLibrary extends StatefulWidget {
   const SoundLibrary({super.key});

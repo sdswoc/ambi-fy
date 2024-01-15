@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/Models/_Soundscape.dart';
-import 'package:frontend/Views/utils/slider.dart';
-import 'package:frontend/Views/utils/waveslider.dart';
+import 'package:frontend/Views/Common/slider.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ClassAudioPlayer extends StatefulWidget {
   final MySoundscape mySoundscape;
-  final List<String>? oneDHkey;
+  final List<String> oneDHkey;
   final String? code;
 
   const ClassAudioPlayer({
     super.key,
     required this.mySoundscape,
-    this.oneDHkey,
+    required this.oneDHkey,
     this.code,
   });
 
@@ -21,6 +21,23 @@ class ClassAudioPlayer extends StatefulWidget {
 }
 
 class _ClassAudioPlayerState extends State<ClassAudioPlayer> {
+  double bar2Position = 0.0;
+
+  Future<void> updateAndSaveBar2Position(double newPosition) async {
+    final SharedPreferences bar2history = await SharedPreferences.getInstance();
+    for (int i = 0; i < 5; i++) {
+      double newPosition = /*bar2history.getDouble(widget.oneDHkey[i]) ??*/ 180;
+      setState(() {
+        bar2Position = newPosition;
+        bar2history.setDouble(widget.oneDHkey[i], bar2Position);
+      });
+    }
+  }
+
+  void restartPlayer() {
+    updateAndSaveBar2Position(0.0);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +69,7 @@ class _ClassAudioPlayerState extends State<ClassAudioPlayer> {
                     size: 28,
                   ),
                   onPressed: () {
-                    //widget.wavesliderstate?.resetVolume();
+                    restartPlayer();
                   },
                 ),
               )

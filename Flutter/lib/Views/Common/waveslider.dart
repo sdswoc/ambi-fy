@@ -1,6 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/Views/utils/slider.dart';
+import 'package:frontend/Views/Common/slider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class WaveSlider extends StatefulWidget {
@@ -39,13 +39,16 @@ class WaveSliderState extends State<WaveSlider> {
   }
 
   _loadPosition() async {
-    final SharedPreferences bar2history = await SharedPreferences.getInstance();
-    double savedPosition = bar2history.getDouble(widget.hkey) ?? 180;
-    setState(() {
-      bar2Position = savedPosition;
-      double volume = 1 / 351 * bar2Position;
-      widget.audioPlayer.setVolume(volume);
-    });
+    if (widget.code == 'history' || widget.code == 'library') {
+      final SharedPreferences bar2history =
+          await SharedPreferences.getInstance();
+      double savedPosition = bar2history.getDouble(widget.hkey) ?? 180;
+      setState(() {
+        bar2Position = savedPosition;
+        double volume = 1 / 351 * bar2Position;
+        widget.audioPlayer.setVolume(volume);
+      });
+    }
   }
 
   resetVolume() async {
@@ -61,9 +64,7 @@ class WaveSliderState extends State<WaveSlider> {
   @override
   void initState() {
     super.initState();
-    if (widget.code == 'history') {
-      _loadPosition();
-    }
+    _loadPosition();
   }
 
   @override

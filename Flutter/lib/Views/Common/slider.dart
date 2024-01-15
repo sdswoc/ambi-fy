@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/Models/_Soundscape.dart';
 import 'dart:math';
 import 'dart:async';
-import 'package:frontend/Views/utils/waveslider.dart';
+import 'package:frontend/Views/Common/waveslider.dart';
 
 List<int> bars = [];
 const barWidth = 5.0;
@@ -83,23 +83,6 @@ class _CustomSliderbarState extends State<CustomSliderbar> {
       print('Error pausing audio: $e');
     }
   }
-
-//  Future<void> _mutevolume() async {
-//    for (int i = 0; i < noOfPlayers; i++) {
-//      await _audioPlayer[i].setVolume(0);
-//    }
-//    setState(() {
-//      hasVolume = false;
-//    });
-//  }
-//  Future<void> _setvolume() async {
-//    for (int i = 0; i < noOfPlayers; i++) {
-//      await _audioPlayer[i].setVolume(WaveSliderState().volume);
-//    }
-//    setState(() {
-//      hasVolume = true;
-//    });
-//  }
 
   @override
   void dispose() {

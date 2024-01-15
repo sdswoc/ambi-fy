@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/Views/utils/bottom_navigation_bar.dart';
+import 'package:frontend/Views/Common/bottom_navigation_bar.dart';
 import 'package:frontend/Views/History/historyGenerator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -85,8 +85,7 @@ class _HistoryState extends State<History> {
                     : null,
               ),
               IconButton(
-                icon: const Icon(Icons.delete_forever_rounded,
-                    color: Colors.white),
+                icon: const Icon(Icons.delete_sweep, color: Colors.white),
                 iconSize: 27,
                 onPressed: () {
                   showDialog(

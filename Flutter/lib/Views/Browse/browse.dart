@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/Views/utils/bottom_navigation_bar.dart';
-import 'package:frontend/Views/Browse/generators.dart';
+import 'package:frontend/Views/Common/bottom_navigation_bar.dart';
+import 'package:frontend/Views/Browse/sound_generators.dart';
 
 class Browse extends StatefulWidget {
   const Browse({super.key});

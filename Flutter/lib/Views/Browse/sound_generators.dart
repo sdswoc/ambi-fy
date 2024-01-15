@@ -1,15 +1,15 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:frontend/ViewModels/_Soundscape_service.dart';
 import 'package:frontend/Models/_Soundscape.dart';
-import 'package:frontend/Views/utils/audioplayer.dart';
-import 'package:frontend/Views/utils/keys.dart';
+import 'package:frontend/ViewModels/view_model.dart';
+import 'package:frontend/Views/Common/audioplayer.dart';
+import 'package:frontend/Views/utils/sound_generator_helper.dart';
 import 'package:frontend/Views/Browse/bottomsheet_options.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SoundGenerator extends StatefulWidget {
   final String? enteredword;
@@ -24,46 +24,19 @@ class SoundGenerator extends StatefulWidget {
 
 class SoundGeneratorState extends State<SoundGenerator> with keysforhistory {
   // ignore: non_constant_identifier_names
-  late SoundscapeService _SoundscapeService;
-  late Future<List<MySoundscape>> _soundscapes;
-  final String djangoURL = dotenv.env['LOCALHOST_URL']!;
   final String animationURL = dotenv.env['ANIMATION_URL']!;
   late List<List<String>>? twoDHkey;
   List<String>? soundscapeName = [];
   List<String>? playlistName = [];
+  late SoundGeneratorViewModel _viewModel;
 
   @override
   void initState() {
     super.initState();
-    _SoundscapeService = SoundscapeService(djangoURL);
-    _soundscapes = _SoundscapeService.getSoundscapes();
-    _loadHistory('soundname__2');
-    _loadPlaylist('historysoundname__1');
-  }
-
-  Future<void> _loadHistory(String key) async {
-    final SharedPreferences historyprefs =
-        await SharedPreferences.getInstance();
-    soundscapeName = historyprefs.getStringList(key) ?? [];
-  }
-
-  Future<void> _loadPlaylist(String key) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    playlistName = prefs.getStringList(key) ?? [];
-  }
-
-  Future<void> _onTapSoundscape(String key, MySoundscape soundscape) async {
-    final SharedPreferences historyprefs =
-        await SharedPreferences.getInstance();
-    soundscapeName!.add(soundscape.name);
-    historyprefs.setStringList(key, soundscapeName!);
-  }
-
-  Future<void> _onTapPlaylist(String key, MySoundscape soundscape) async {
-    final SharedPreferences historyprefs =
-        await SharedPreferences.getInstance();
-    playlistName!.add(soundscape.name);
-    historyprefs.setStringList(key, playlistName!);
+    loadHistory('soundname__2');
+    loadPlaylist('historysoundname__1');
+    loadDownload('downloadsoundname__1');
+    _viewModel = SoundGeneratorViewModel();
   }
 
   // ignore: non_constant_identifier_names
@@ -85,7 +58,7 @@ class SoundGeneratorState extends State<SoundGenerator> with keysforhistory {
                   onLongPress: null,
                   onTap: () {
                     //-------------------------------------------
-                    _onTapSoundscape('soundname__2', soundscape);
+                    onTapSoundscape('soundname__2', soundscape);
                     //-------------------------------------------
                     Get.to(
                       () => ClassAudioPlayer(
@@ -152,11 +125,34 @@ class SoundGeneratorState extends State<SoundGenerator> with keysforhistory {
                                                 children: [
                                                   GestureDetector(
                                                       onTap: () {
-                                                        _onTapPlaylist(
+                                                        HapticFeedback
+                                                            .lightImpact();
+                                                        onTapPlaylist(
                                                             'historysoundname__1',
                                                             soundscape);
                                                         Navigator.of(context)
                                                             .pop();
+
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                                const SnackBar(
+                                                          content: Text(
+                                                            'Added to playlist!',
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 15),
+                                                          ),
+                                                          duration: Duration(
+                                                              seconds: 2),
+                                                          backgroundColor:
+                                                              Color.fromARGB(
+                                                                  255,
+                                                                  48,
+                                                                  47,
+                                                                  47),
+                                                        ));
                                                       },
                                                       child: const BottomSheetOptions(
                                                           message:
@@ -164,7 +160,35 @@ class SoundGeneratorState extends State<SoundGenerator> with keysforhistory {
                                                           icon: Icon(Icons
                                                               .add_circle_outline))),
                                                   GestureDetector(
-                                                      onTap: () {},
+                                                      onTap: () {
+                                                        HapticFeedback
+                                                            .lightImpact();
+                                                        onTapDownload(
+                                                            'downloadsoundname__1',
+                                                            soundscape);
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                                const SnackBar(
+                                                          content: Text(
+                                                            'Downloading Soundscapes!',
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 15),
+                                                          ),
+                                                          duration: Duration(
+                                                              seconds: 3),
+                                                          backgroundColor:
+                                                              Color.fromARGB(
+                                                                  255,
+                                                                  48,
+                                                                  47,
+                                                                  47),
+                                                        ));
+                                                      },
                                                       child: const BottomSheetOptions(
                                                           message:
                                                               'Download Soundscape',
@@ -200,7 +224,7 @@ class SoundGeneratorState extends State<SoundGenerator> with keysforhistory {
 //Fetching data
   FutureBuilder<List<MySoundscape>> futureWidget() {
     return FutureBuilder<List<MySoundscape>>(
-        future: _soundscapes,
+        future: _viewModel.loadSoundscapes(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Lottie.network(animationURL,

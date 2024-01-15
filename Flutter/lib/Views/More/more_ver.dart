@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/Views/utils/bottom_navigation_bar.dart';
+import 'package:frontend/Views/Common/bottom_navigation_bar.dart';
 
 class MoreVer extends StatefulWidget {
   const MoreVer({super.key});
