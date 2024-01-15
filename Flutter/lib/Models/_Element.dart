@@ -10,4 +10,11 @@ class MyElement {
       audio: data['audio'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'audio': audio,
+    };
+  }
 }

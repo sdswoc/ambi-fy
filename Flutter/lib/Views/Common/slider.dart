@@ -53,14 +53,8 @@ class _CustomSliderbarState extends State<CustomSliderbar> {
         for (int i = 0; i < noOfPlayers; i++) {
           audioUrl[i] = widget.mySoundscape.elements[i].audio;
           await _audioPlayer[i].stop();
-          if (widget.mySoundscape.elements[i].name == 'Birds') {
-            //_audioPlayer[i].setSource(DeviceFileSource(audioUrl[i]));
-            _audioPlayer[i].setReleaseMode(ReleaseMode.loop);
-            await _audioPlayer[i].play(DeviceFileSource(audioUrl[i]));
-          } else {
-            _audioPlayer[i].setReleaseMode(ReleaseMode.loop);
-            await _audioPlayer[i].play(DeviceFileSource(audioUrl[i]));
-          }
+          _audioPlayer[i].setReleaseMode(ReleaseMode.loop);
+          await _audioPlayer[i].play(DeviceFileSource(audioUrl[i]));
         }
         setState(() {
           isPlaying = true;

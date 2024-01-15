@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/Models/_Soundscape.dart';
 import 'package:frontend/ViewModels/view_model.dart';
+import 'package:frontend/Views/Browse/check_permission.dart';
 import 'package:frontend/Views/Common/audioplayer.dart';
 import 'package:frontend/Views/Library/container_soundscape.dart';
 import 'package:frontend/Views/utils/sound_generator_helper.dart';
@@ -19,7 +20,6 @@ class ManyChoiceChip extends StatefulWidget {
 }
 
 class _ManyChoiceChipState extends State<ManyChoiceChip> with keysforhistory {
-  Map<String, bool> playlists = {'All': true, 'Downloaded': false};
   final String animationURL = dotenv.env['ANIMATION_URL']!;
   late List<List<String>>? twoDHkey;
   late SoundGeneratorViewModel _libraryviewModel;
@@ -27,6 +27,17 @@ class _ManyChoiceChipState extends State<ManyChoiceChip> with keysforhistory {
   List<String>? playlistName = [];
   List<String>? downloadName = [];
   List<String>? displayName = [];
+  bool isPermission = false;
+  var checkAllPermissions = CheckPermission();
+
+  checkPermission() async {
+    var permission = await checkAllPermissions.isStoragePermission();
+    if (permission) {
+      setState(() {
+        isPermission = true;
+      });
+    }
+  }
 
   Widget loopchip(Map<String, bool> p) {
     List<Widget> chips = [];
@@ -78,6 +89,7 @@ class _ManyChoiceChipState extends State<ManyChoiceChip> with keysforhistory {
     super.initState();
     _libraryviewModel = SoundGeneratorViewModel();
     loadHistory('soundname__2');
+    checkPermission();
   }
 
   // ignore: non_constant_identifier_names
@@ -255,14 +267,6 @@ class _ManyChoiceChipState extends State<ManyChoiceChip> with keysforhistory {
     } else {
       List<String>? downloadName = prefs.getStringList('downloadsoundname__1');
       return downloadName;
-    }
-  }
-
-  String codeChoicechip() {
-    if (playlists['All'] == true) {
-      return 'historysoundname__1';
-    } else {
-      return 'downloadsoundname__1';
     }
   }
 }

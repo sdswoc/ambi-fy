@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/Models/_Soundscape.dart';
+import 'package:frontend/Models/downloadedsoundscape.dart';
 import 'package:frontend/ViewModels/view_model.dart';
+import 'package:frontend/Views/Browse/check_permission.dart';
 import 'package:frontend/Views/Common/audioplayer.dart';
 import 'package:frontend/Views/utils/sound_generator_helper.dart';
 import 'package:frontend/Views/Browse/bottomsheet_options.dart';
@@ -29,6 +31,17 @@ class SoundGeneratorState extends State<SoundGenerator> with keysforhistory {
   List<String>? soundscapeName = [];
   List<String>? playlistName = [];
   late SoundGeneratorViewModel _viewModel;
+  bool isPermission = false;
+  var checkAllPermissions = CheckPermission();
+
+  checkPermission() async {
+    var permission = await checkAllPermissions.isStoragePermission();
+    if (permission) {
+      setState(() {
+        isPermission = true;
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -37,6 +50,7 @@ class SoundGeneratorState extends State<SoundGenerator> with keysforhistory {
     loadPlaylist('historysoundname__1');
     loadDownload('downloadsoundname__1');
     _viewModel = SoundGeneratorViewModel();
+    checkPermission();
   }
 
   // ignore: non_constant_identifier_names
@@ -161,8 +175,7 @@ class SoundGeneratorState extends State<SoundGenerator> with keysforhistory {
                                                               .add_circle_outline))),
                                                   GestureDetector(
                                                       onTap: () {
-                                                        HapticFeedback
-                                                            .lightImpact();
+                                                        checkPermission();
                                                         onTapDownload(
                                                             'downloadsoundname__1',
                                                             soundscape);

@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import 'package:frontend/Views/Library/librarybody.dart';
 import 'package:frontend/Views/Common/bottom_navigation_bar.dart';
+import 'package:frontend/Views/utils/sound_generator_helper.dart';
 
 class SoundLibrary extends StatefulWidget {
   const SoundLibrary({super.key});
@@ -74,11 +75,31 @@ class _SoundLibraryState extends State<SoundLibrary> {
                       )
                     : null,
               ),
-              IconButton(
+              PopupMenuButton(
                 icon: const Icon(Icons.more_vert, color: Colors.white),
                 iconSize: 27,
-                onPressed: () {},
-              ),
+                itemBuilder: (context) => [
+                  const PopupMenuItem(
+                    value: 1,
+                    child: Text('Sort by: A-Z'),
+                  ),
+                  const PopupMenuItem(
+                    value: 2,
+                    child: Text('Sort by: Z-A'),
+                  ),
+                ],
+                onSelected: (value) {
+                  if (value == 1) {
+                    setState(() {
+                      sortListAscending(codeChoicechip());
+                    });
+                  } else if (value == 2) {
+                    setState(() {
+                      sortListDescending(codeChoicechip());
+                    });
+                  }
+                },
+              )
             ]),
         body: ManyChoiceChip(
           code: code,

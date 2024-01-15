@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 List<String>? soundscapeName = [];
 List<String>? playlistName = [];
 List<String>? downloadName = [];
+Map<String, bool> playlists = {'All': true, 'Downloaded': false};
 
 mixin keysforhistory {
   List<List<String>>? Hkeys(
@@ -34,6 +35,36 @@ void loadHistory(String key) async {
 void loadPlaylist(String key) async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   playlistName = prefs.getStringList(key) ?? [];
+}
+
+void sortListAscending(String key) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  if (playlists['All'] == true) {
+    playlistName!.sort();
+    prefs.setStringList(key, playlistName!);
+  } else if (playlists['Downloaded'] == true && playlists['All'] == false) {
+    downloadName!.sort();
+    prefs.setStringList(key, downloadName!);
+  }
+}
+
+String codeChoicechip() {
+  if (playlists['Downloaded'] == true && playlists['All'] == false) {
+    return 'downloadsoundname__1';
+  } else {
+    return 'historysoundname__1';
+  }
+}
+
+void sortListDescending(String key) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  if (playlists['All'] == true) {
+    playlistName!.sort((a, b) => b.compareTo(a));
+    prefs.setStringList(key, playlistName!);
+  } else if (playlists['Downloaded'] == true && playlists['All'] == false) {
+    downloadName!.sort((a, b) => b.compareTo(a));
+    prefs.setStringList(key, downloadName!);
+  }
 }
 
 void loadDownload(String key) async {

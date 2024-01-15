@@ -14,6 +14,9 @@ class MySoundscape {
   }
 
   Map<String, dynamic> toJson() {
-    return {'name': name, 'elements': elements};
+    return {
+      'name': name,
+      'elements': elements.map((element) => element.toJson()).toList(),
+    };
   }
 }

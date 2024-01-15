@@ -16,9 +16,4 @@ class Soundscape(models.Model):
     def __str__(self):
         return self.name
     
-class History(models.Model):
-     soundscape = models.ForeignKey(Soundscape, on_delete= models.CASCADE, null = True)  
-
-     def __str__(self):
-        return self.soundscape.name
      

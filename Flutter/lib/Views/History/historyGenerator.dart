@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/Models/_Soundscape.dart';
-import 'package:frontend/Models/_Soundscape_service.dart';
 import 'package:frontend/ViewModels/view_model.dart';
 import 'package:frontend/Views/Common/audioplayer.dart';
 import 'package:frontend/Views/utils/sound_generator_helper.dart';

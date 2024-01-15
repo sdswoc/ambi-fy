@@ -39,7 +39,7 @@ class WaveSliderState extends State<WaveSlider> {
   }
 
   _loadPosition() async {
-    if (widget.code == 'history' || widget.code == 'library') {
+    if (widget.code == 'history') {
       final SharedPreferences bar2history =
           await SharedPreferences.getInstance();
       double savedPosition = bar2history.getDouble(widget.hkey) ?? 180;
