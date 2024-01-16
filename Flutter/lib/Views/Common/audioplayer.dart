@@ -3,23 +3,19 @@ import 'package:frontend/Models/_Soundscape.dart';
 import 'package:frontend/Views/Common/slider.dart';
 import 'package:get/get.dart';
 
-class ClassAudioPlayer extends StatefulWidget {
+class ClassAudioPlayer extends StatelessWidget {
   final MySoundscape mySoundscape;
-  final List<String> oneDHkey;
+  final List<String>? oneDHkey;
   final String? code;
+  final List<String>? filepath;
 
-  const ClassAudioPlayer({
-    super.key,
-    required this.mySoundscape,
-    required this.oneDHkey,
-    this.code,
-  });
+  const ClassAudioPlayer(
+      {super.key,
+      required this.mySoundscape,
+      this.oneDHkey,
+      this.code,
+      this.filepath});
 
-  @override
-  State<ClassAudioPlayer> createState() => _ClassAudioPlayerState();
-}
-
-class _ClassAudioPlayerState extends State<ClassAudioPlayer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +32,7 @@ class _ClassAudioPlayerState extends State<ClassAudioPlayer> {
             ),
           ),
           title: Text(
-            widget.mySoundscape.name,
+            mySoundscape.name,
             textAlign: TextAlign.center,
             style: const TextStyle(
                 fontFamily: 'Roboto', fontSize: 22, color: Colors.white),
@@ -46,9 +42,10 @@ class _ClassAudioPlayerState extends State<ClassAudioPlayer> {
           children: [
             Row(children: [
               CustomSliderbar(
-                mySoundscape: widget.mySoundscape,
-                oneDHkey: widget.oneDHkey,
-                code: widget.code,
+                mySoundscape: mySoundscape,
+                oneDHkey: oneDHkey,
+                code: code,
+                filepath: filepath,
               ),
             ])
           ],

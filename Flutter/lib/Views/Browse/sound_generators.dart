@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/Models/_Soundscape.dart';
-import 'package:frontend/Models/downloadedsoundscape.dart';
 import 'package:frontend/ViewModels/view_model.dart';
 import 'package:frontend/Views/Browse/check_permission.dart';
+import 'package:frontend/Views/Browse/downloader.dart';
 import 'package:frontend/Views/Common/audioplayer.dart';
 import 'package:frontend/Views/utils/sound_generator_helper.dart';
 import 'package:frontend/Views/Browse/bottomsheet_options.dart';
@@ -173,40 +173,13 @@ class SoundGeneratorState extends State<SoundGenerator> with keysforhistory {
                                                               'Add to Playlists',
                                                           icon: Icon(Icons
                                                               .add_circle_outline))),
-                                                  GestureDetector(
-                                                      onTap: () {
-                                                        checkPermission();
-                                                        onTapDownload(
-                                                            'downloadsoundname__1',
-                                                            soundscape);
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                                const SnackBar(
-                                                          content: Text(
-                                                            'Downloading Soundscapes!',
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize: 15),
-                                                          ),
-                                                          duration: Duration(
-                                                              seconds: 3),
-                                                          backgroundColor:
-                                                              Color.fromARGB(
-                                                                  255,
-                                                                  48,
-                                                                  47,
-                                                                  47),
-                                                        ));
-                                                      },
-                                                      child: const BottomSheetOptions(
-                                                          message:
-                                                              'Download Soundscape',
-                                                          icon: Icon(Icons
-                                                              .download_for_offline_outlined)))
+                                                  DownloaderWidget(
+                                                      mySoundscape: soundscape,
+                                                      oneDHkey: twoDHkey![
+                                                          _soundscapes.indexOf(
+                                                              soundscape)],
+                                                      checkpermission:
+                                                          checkPermission())
                                                 ],
                                               );
                                             },

@@ -20,13 +20,14 @@ class CustomSliderbar extends StatefulWidget {
   final MySoundscape mySoundscape;
   final List<String>? oneDHkey;
   final String? code;
+  final List<String>? filepath;
 
-  const CustomSliderbar({
-    super.key,
-    required this.mySoundscape,
-    this.oneDHkey,
-    this.code,
-  });
+  const CustomSliderbar(
+      {super.key,
+      required this.mySoundscape,
+      this.oneDHkey,
+      this.code,
+      this.filepath});
 
   @override
   State<CustomSliderbar> createState() => _CustomSliderbarState();
@@ -48,20 +49,32 @@ class _CustomSliderbarState extends State<CustomSliderbar> {
   }
 
   Future<void> _play() async {
-    try {
-      if (widget.mySoundscape.elements.isNotEmpty) {
-        for (int i = 0; i < noOfPlayers; i++) {
-          audioUrl[i] = widget.mySoundscape.elements[i].audio;
-          await _audioPlayer[i].stop();
-          _audioPlayer[i].setReleaseMode(ReleaseMode.loop);
-          await _audioPlayer[i].play(DeviceFileSource(audioUrl[i]));
-        }
-        setState(() {
-          isPlaying = true;
-        });
+    if (widget.code == 'download') {
+      for (int i = 0; i < noOfPlayers; i++) {
+        audioUrl[i] = widget.mySoundscape.elements[i].audio;
+        await _audioPlayer[i].stop();
+        _audioPlayer[i].setReleaseMode(ReleaseMode.loop);
+        await _audioPlayer[i].play(DeviceFileSource(widget.filepath![i]));
       }
-    } catch (e) {
-      print('Error playing audio: $e');
+      setState(() {
+        isPlaying = true;
+      });
+    } else {
+      try {
+        if (widget.mySoundscape.elements.isNotEmpty) {
+          for (int i = 0; i < noOfPlayers; i++) {
+            audioUrl[i] = widget.mySoundscape.elements[i].audio;
+            await _audioPlayer[i].stop();
+            _audioPlayer[i].setReleaseMode(ReleaseMode.loop);
+            await _audioPlayer[i].play(DeviceFileSource(audioUrl[i]));
+          }
+          setState(() {
+            isPlaying = true;
+          });
+        }
+      } catch (e) {
+        print('Error playing audio: $e');
+      }
     }
   }
 

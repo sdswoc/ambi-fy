@@ -2,9 +2,15 @@ import 'package:flutter/material.dart';
 
 class BottomSheetOptions extends StatelessWidget {
   final String message;
-  final Icon icon;
+  final IconButton? iconbutton1;
+  final IconButton? iconbutton2;
+  final Icon? icon;
   const BottomSheetOptions(
-      {super.key, required this.message, required this.icon});
+      {super.key,
+      required this.message,
+      this.iconbutton1,
+      this.iconbutton2,
+      this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -19,18 +25,29 @@ class BottomSheetOptions extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.all(15),
-                child: Icon(icon.icon, color: Colors.white, size: 30),
+                child: iconbutton1,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(15),
+                child: icon,
               ),
               const SizedBox(width: 20),
-              Text(
-                message,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Roboto',
+              SizedBox(
+                width: 150,
+                child: Text(
+                  message,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Roboto',
+                  ),
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.all(15),
+                child: iconbutton2,
+              )
             ],
           ),
         ),
